@@ -1,0 +1,35 @@
+{
+  "content_hashes": {
+    "balanced": "0a051cf1434f1f6a7492db1f02e1002381c13e929023f00b1bef911a1803b7dd",
+    "negatives": "fa5fbd3e8a1b1b3434b9ede76b9c6e6af38a12e27f98dd574da922ec2037e152",
+    "positives": "1ba489dc967bf974031cd2f5a1b67070dbc132768304ff02837c0b272137a382"
+  },
+  "counts": {
+    "active_positives": 5254,
+    "balanced_rows": 6698,
+    "classification_rows": 10263,
+    "clusters_total": 3614,
+    "grampa_rows": 51345,
+    "inactive_positives": 1194,
+    "negatives_unique": 3815,
+    "per_strain_rows": 48891,
+    "positives_unique": 6448,
+    "regression_rows": 6448
+  },
+  "created_utc": "2026-06-20T20:38:22+00:00",
+  "files": {
+    "activity_classification.parquet": "acede364bc6dc7519991ff373567803e08f4cc43f826b01f76d6c0ffe67e6a2d",
+    "activity_regression.parquet": "e65da13825e9e04ad57892c4f770b6742d685093cf91eeda8dbc7401a3f03159",
+    "mic_per_strain.parquet": "34f2f6a9086be24f9732dd57d1794e97dc9e50bea30a0275d02d80d4dfd3a7d8"
+  },
+  "params": {
+    "active_log10_mic_threshold": 1.5051,
+    "active_mic_uM_max": 32,
+    "cluster_identity_threshold": 0.6,
+    "length": {
+      "max": 50,
+      "min": 5
+    },
+    "seed": 42
+  }
+}

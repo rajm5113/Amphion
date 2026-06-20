@@ -1,0 +1,14 @@
+# Amphion CPU dependencies — pinned to the versions verified in the project .venv.
+# Install:  python -m venv .venv  &&  .venv/Scripts/python -m pip install -e .
+# (GPU phases use torch + fair-esm on Kaggle/Colab — see pyproject [gpu] extra.)
+
+numpy==2.4.6
+pandas==3.0.3
+scipy==1.18.0
+scikit-learn==1.9.0
+matplotlib==3.11.0
+joblib==1.5.3
+PyYAML==6.0.3
+rapidfuzz==3.14.5
+tqdm==4.68.3
+pyarrow==24.0.0

@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "amphion"
+version = "0.1.0"
+description = "AI-designed antimicrobial peptide pipeline (Stage 1, in-silico)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Research and educational use" }
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "scikit-learn",
+    "matplotlib",
+    "joblib",
+    "pyyaml",
+    "rapidfuzz",
+    "tqdm",
+    "pyarrow",        # parquet IO for processed datasets
+]
+
+[project.optional-dependencies]
+# Reserved for the GPU phases (run on Kaggle/Colab, NOT installed locally).
+gpu = ["torch", "fair-esm"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

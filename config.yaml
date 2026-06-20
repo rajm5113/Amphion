@@ -1,0 +1,51 @@
+# Amphion — single source of truth for thresholds, paths, seeds, ranking weights.
+# Everything tunable lives here so the story can be re-tuned without code changes.
+
+seed: 42
+
+# The 20 standard amino acids; AMPs are short peptides.
+length:
+  min: 5
+  max: 50
+
+# Activity: a peptide is "active" if its best (minimum) MIC is at or below this.
+# 32 uM  ==  log10(MIC uM) <= 1.505.  Alternative (<=25 ug/mL) needs per-peptide MW conversion.
+activity:
+  active_mic_uM_max: 32
+
+# Toxicity: drop candidates whose predicted hemolytic probability exceeds this.
+toxicity:
+  hemolytic_prob_max: 0.5      # lower => stricter safety filter
+
+# Novelty: a candidate is "novel" if its max sequence identity to ANY known
+# sequence is below this threshold.
+novelty:
+  max_identity_to_known: 0.6
+
+# Composite ranking weights (Phase 6). Must reflect the project's priorities.
+ranking:
+  w_amp: 0.30        # P(antimicrobial)
+  w_potency: 0.30    # normalized -pred_log_mic (lower MIC -> higher)
+  w_safety: 0.25     # 1 - hemolytic_prob
+  w_novelty: 0.10    # how different from known sequences
+  w_synth: 0.05      # synthesizability penalty (length/charge/hydrophobicity/cysteine)
+
+paths:
+  data: data/
+  raw: data/raw/
+  interim: data/interim/
+  processed: data/processed/
+  external: data/external/
+  models: models/
+  reports: reports/
+  figures: reports/figures/
+
+# Public data sources (raw URLs, fetched at runtime; verified reachable).
+data_sources:
+  grampa: https://raw.githubusercontent.com/zswitten/Antimicrobial-Peptides/master/data/grampa.csv
+  neg_train: https://raw.githubusercontent.com/BirolLab/AMPlify/master/data/AMPlify_non_AMP_train_balanced.fa
+  neg_test: https://raw.githubusercontent.com/BirolLab/AMPlify/master/data/AMPlify_non_AMP_test_balanced.fa
+
+# Homology de-duplication: greedy single-linkage clustering at this identity.
+clustering:
+  identity_threshold: 0.6

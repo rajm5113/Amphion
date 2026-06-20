@@ -7,6 +7,7 @@ A real bacterial kill must be confirmed in a wet lab (Stage 3, out of scope).
 
 from .config import load_config, get_config, repo_root, Config
 from .utils import set_seed, get_logger, ensure_dir, read_fasta
+from .score import score_activity
 
 __version__ = "0.1.0"
 
@@ -19,5 +20,6 @@ __all__ = [
     "get_logger",
     "ensure_dir",
     "read_fasta",
+    "score_activity",
     "__version__",
 ]

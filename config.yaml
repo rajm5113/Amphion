@@ -15,7 +15,9 @@ activity:
 
 # Toxicity: drop candidates whose predicted hemolytic probability exceeds this.
 toxicity:
-  hemolytic_prob_max: 0.5      # lower => stricter safety filter
+  hemolytic_prob_max: 0.5          # pipeline gate: drop candidates above this
+  hemolytic_hc50_uM_max: 100       # label: hemolytic if HC50 <= 100 uM (reproduces
+                                   # HemoPI2's own binary labels 100% on its data)
 
 # Novelty: a candidate is "novel" if its max sequence identity to ANY known
 # sequence is below this threshold.
@@ -45,6 +47,9 @@ data_sources:
   grampa: https://raw.githubusercontent.com/zswitten/Antimicrobial-Peptides/master/data/grampa.csv
   neg_train: https://raw.githubusercontent.com/BirolLab/AMPlify/master/data/AMPlify_non_AMP_train_balanced.fa
   neg_test: https://raw.githubusercontent.com/BirolLab/AMPlify/master/data/AMPlify_non_AMP_test_balanced.fa
+  # Toxicity (Phase 3): HemoPI2 hemolysis data — SEQUENCE, HC50 (uM), label.
+  hemopi2_crossval: https://raw.githubusercontent.com/raghavagps/HemoPI2/main/Dataset/cross_val_dataset.csv
+  hemopi2_independent: https://raw.githubusercontent.com/raghavagps/HemoPI2/main/Dataset/independent_dataset.csv
 
 # Homology de-duplication: greedy single-linkage clustering at this identity.
 clustering:

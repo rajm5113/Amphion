@@ -36,7 +36,7 @@ def download_file(url: str, dest: str | Path, force: bool = False) -> Path:
 
 
 def download_all(cfg=None, force: bool = False) -> dict[str, Path]:
-    """Download every Phase-1 source; return a name -> path map."""
+    """Download every Phase-1 (activity) source; return a name -> path map."""
     cfg = cfg or get_config()
     raw = cfg.resolve_path("raw")
     src = cfg.data_sources
@@ -47,6 +47,17 @@ def download_all(cfg=None, force: bool = False) -> dict[str, Path]:
     }
 
 
+def download_toxicity(cfg=None, force: bool = False) -> dict[str, Path]:
+    """Download the Phase-3 hemolysis sources (HemoPI2: SEQUENCE, HC50 uM, label)."""
+    cfg = cfg or get_config()
+    raw = cfg.resolve_path("raw")
+    src = cfg.data_sources
+    return {
+        "hemopi2_crossval": download_file(src.hemopi2_crossval, raw / "hemopi2_cross_val.csv", force),
+        "hemopi2_independent": download_file(src.hemopi2_independent, raw / "hemopi2_independent.csv", force),
+    }
+
+
 if __name__ == "__main__":
-    for name, path in download_all().items():
-        print(f"{name:10s} -> {path}")
+    for name, path in {**download_all(), **download_toxicity()}.items():
+        print(f"{name:20s} -> {path}")

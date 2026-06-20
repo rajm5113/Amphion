@@ -51,3 +51,11 @@ def score_activity(seq: str) -> dict:
         "pred_log_mic": pred_log_mic,
         "pred_mic_uM": float(10.0 ** pred_log_mic),
     }
+
+
+def score_toxicity(seq: str) -> dict:
+    """Return {hemolytic_prob} for one peptide (probability it harms human RBCs)."""
+    s = _validate(seq)
+    x = featurize(s).reshape(1, -1)
+    tox = _load("tox_clf.joblib")
+    return {"hemolytic_prob": float(tox["model"].predict_proba(x)[0, 1])}

@@ -1,0 +1,23 @@
+{
+  "content_hash": "b09b26f2f07fd3378fcda9852b9b728e8f66224433572683990e98cb7c69a705",
+  "counts": {
+    "clusters": 414,
+    "hemolytic": 891,
+    "label_agreement_with_source": 1.0,
+    "non_hemolytic": 1035,
+    "peptides": 1926
+  },
+  "created_utc": "2026-06-20T20:50:07+00:00",
+  "file_sha256": "b55fc09a8017e112827efb295e505f2743d6345d9b309a2dff6a33c0384c4899",
+  "params": {
+    "duplicate_policy": "min HC50 (conservative)",
+    "hemolytic_hc50_uM_max": 100,
+    "hemolytic_log10_hc50_threshold": 2.0,
+    "length": {
+      "max": 50,
+      "min": 5
+    },
+    "seed": 42
+  },
+  "source": "HemoPI2 (raghavagps) cross_val + independent"
+}

@@ -25,6 +25,8 @@ dependencies = [
 [project.optional-dependencies]
 # Reserved for the GPU phases (run on Kaggle/Colab, NOT installed locally).
 gpu = ["torch", "fair-esm"]
+# The Gradio demo app (app/app.py).
+app = ["gradio"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

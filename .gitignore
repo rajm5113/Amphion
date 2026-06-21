@@ -27,6 +27,10 @@ env/
 .ipynb_checkpoints/
 .pytest_cache/
 
+# --- Gradio demo runtime ---
+.gradio/
+flagged/
+
 # --- OS / editors ---
 .DS_Store
 Thumbs.db

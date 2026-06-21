@@ -1,0 +1,11 @@
+# Dependencies for running the demo on Hugging Face Spaces.
+# (The app uses only the classical models + novelty — no torch needed.)
+numpy
+pandas
+scipy
+scikit-learn
+joblib
+pyyaml
+rapidfuzz
+pyarrow
+gradio

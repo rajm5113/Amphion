@@ -12,6 +12,7 @@ length:
 # 32 uM  ==  log10(MIC uM) <= 1.505.  Alternative (<=25 ug/mL) needs per-peptide MW conversion.
 activity:
   active_mic_uM_max: 32
+  amp_prob_min: 0.5            # pipeline gate: keep candidates with amp_prob >= this
 
 # Toxicity: drop candidates whose predicted hemolytic probability exceeds this.
 toxicity:

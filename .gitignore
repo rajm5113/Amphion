@@ -6,9 +6,17 @@
 /data/interim/*
 !/data/interim/.gitkeep
 
-# --- Large model binaries (kept reproducible via code; cards are committed) ---
+# --- Models ---
+# Large/regenerable binaries stay out (baseline RF/calibrated, etc.); the small
+# DEPLOYED hybrid models ARE committed so the repo + HF demo run on clone.
 /models/*
 !/models/.gitkeep
+!/models/activity_clf_esm.joblib
+!/models/tox_clf_esm.joblib
+!/models/mic_reg.joblib
+!/models/generator_vae.pt
+!/models/esm_config.json
+!/models/metrics_esm.json
 
 # Keep processed datasets + manifests tracked (small, aids reproducibility):
 # data/processed/*.parquet and data/processed/manifest.json ARE committed.
@@ -30,6 +38,9 @@ env/
 # --- Gradio demo runtime ---
 .gradio/
 flagged/
+
+# --- scratch run logs ---
+reports/_*.log
 
 # --- OS / editors ---
 .DS_Store

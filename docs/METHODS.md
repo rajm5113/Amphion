@@ -39,13 +39,22 @@ Cluster-aware ROC-AUC ≈ 0.95 (random-split ≈ 0.97). The biological sanity ch
 features dominating importance — is asserted in the card.
 
 **MIC regressor.** ElasticNet / RF / HistGB on `log₁₀(min MIC)`; cluster-aware `GroupKFold`;
-RMSE ≈ 0.76, Spearman ≈ 0.52. Used as a coarse potency signal, not a quantitative predictor.
+RMSE ≈ 0.76, Spearman ≈ 0.50. **Deployability-aware selection** picks the most compact model within
+3% of the best RMSE — gradient boosting (~0.4 MB) over a 194 MB Random Forest for a <2% accuracy gain.
+Used as a coarse potency signal, not a quantitative predictor.
 
 **Toxicity classifier.** Class-weighted LogReg / RF / HistGB on the hemolysis set; selected by
-cluster-aware **PR-AUC** (imbalance-aware); isotonic-calibrated. ROC-AUC ≈ 0.76, PR-AUC ≈ 0.70.
+cluster-aware **PR-AUC** (imbalance-aware); isotonic-calibrated.
 
 Unified API: `score_activity(seq) → {amp_prob, pred_log_mic, pred_mic_uM}`,
 `score_toxicity(seq) → {hemolytic_prob}`.
+
+**ESM-2 hybrid (deployed).** ESM-2 (150M) embeddings were benchmarked against the 29 hand-crafted
+features on identical splits. ESM-2 *improved* **activity** (AUC 0.954 → 0.966) and **toxicity**
+(PR-AUC 0.704 → 0.720) but *lost* on **MIC** (RMSE 0.755 → 0.818 — potency is charge-driven, encoded
+directly by the hand-crafted features and diluted by mean-pooled embeddings). Amphion therefore
+deploys a **hybrid**: ESM-2 for activity + toxicity, hand-crafted features for MIC. The scorer
+auto-selects ESM models when present, else the CPU-only baseline.
 
 ## 5. Generator
 

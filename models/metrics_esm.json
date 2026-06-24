@@ -1,0 +1,26 @@
+{
+  "esm": {
+    "activity": {
+      "AUC": 0.9662657174463063,
+      "model": "MLP"
+    },
+    "mic": {
+      "RMSE": 0.8177938835394698,
+      "Spearman": 0.43691585339794803,
+      "model": "Ridge"
+    },
+    "toxicity": {
+      "ROC_AUC": 0.757273757434788,
+      "PR_AUC": 0.7203916449734369,
+      "model": "MLP"
+    }
+  },
+  "baseline": {
+    "activity_AUC": 0.954,
+    "activity_MCC": 0.781,
+    "mic_RMSE": 0.755,
+    "mic_Spearman": 0.518,
+    "tox_ROC_AUC": 0.762,
+    "tox_PR_AUC": 0.704
+  }
+}

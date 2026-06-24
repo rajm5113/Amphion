@@ -2,7 +2,9 @@
 
 **Task:** predict a peptide's best potency `log10(min MIC, uM)` — lower = more potent.
 **Data:** GRAMPA positives (6,448 peptides, 29 features).
-**Selected model:** RandomForest (lowest cluster-aware RMSE).
+**Selected model:** HistGB — *deployability-aware* pick: the most compact model
+within 3% of the best RMSE (a 400-tree Random Forest is ~200x larger on disk for a
+<2% accuracy gain — the wrong trade for a deployable system).
 **CV:** GroupKFold on homology cluster_id (no near-duplicate leakage).
 
 | Model | RMSE | MAE | R² | Spearman |

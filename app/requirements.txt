@@ -1,5 +1,6 @@
 # Dependencies for running the demo on Hugging Face Spaces.
-# (The app uses only the classical models + novelty — no torch needed.)
+# The hybrid uses ESM-2 (torch + fair-esm) for activity/toxicity; the ESM-2
+# weights (~600 MB) download on first run and are cached.
 numpy
 pandas
 scipy
@@ -9,3 +10,5 @@ pyyaml
 rapidfuzz
 pyarrow
 gradio
+torch
+fair-esm

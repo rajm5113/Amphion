@@ -24,23 +24,37 @@ log = get_logger("amphion.pipeline")
 
 
 def _batch_score(seqs, cfg) -> pd.DataFrame:
-    """Score all sequences in one pass: amp_prob (+uncertainty), pred MIC, hemolytic_prob."""
-    models = cfg.resolve_path("models")
-    clf = joblib.load(models / "activity_clf.joblib")
-    reg = joblib.load(models / "mic_reg.joblib")
-    tox = joblib.load(models / "tox_clf.joblib")
-    X = featurize_many(seqs)
+    """Score all sequences in one pass (hybrid backend): amp_prob (+uncertainty),
+    pred MIC, hemolytic_prob. ESM embeddings are computed once and reused."""
+    from .score import _load, _load_preferred
+
+    clf = _load_preferred("activity_clf_esm.joblib", "activity_clf.joblib")
+    reg = _load("mic_reg.joblib")  # hybrid: MIC stays physicochemical
+    tox = _load_preferred("tox_clf_esm.joblib", "tox_clf.joblib")
+
+    arts = (clf, reg, tox)
+    X_phys = featurize_many(seqs) if any(a.get("features") != "esm" for a in arts) else None
+    X_esm = None
+    if any(a.get("features") == "esm" for a in arts):
+        from .features.esm_embed import embed_sequences
+
+        esm_cfg = next(a["esm"] for a in arts if a.get("features") == "esm")
+        X_esm = embed_sequences(seqs, esm_cfg, batch_size=32)
+
+    def feat(a):
+        return X_esm if a.get("features") == "esm" else X_phys
 
     cal = clf["model"]
-    amp_prob = cal.predict_proba(X)[:, 1]
+    Xa = feat(clf)
+    amp_prob = cal.predict_proba(Xa)[:, 1]
     try:  # ensemble spread across the calibrated CV sub-models = uncertainty
-        sub = np.stack([cc.predict_proba(X)[:, 1] for cc in cal.calibrated_classifiers_], axis=1)
+        sub = np.stack([cc.predict_proba(Xa)[:, 1] for cc in cal.calibrated_classifiers_], axis=1)
         amp_unc = sub.std(axis=1)
     except Exception:
         amp_unc = np.full(len(seqs), np.nan)
 
-    pred_log_mic = reg["model"].predict(X)
-    hemolytic = tox["model"].predict_proba(X)[:, 1]
+    pred_log_mic = reg["model"].predict(feat(reg))
+    hemolytic = tox["model"].predict_proba(feat(tox))[:, 1]
     return pd.DataFrame({
         "sequence": list(seqs),
         "length": [len(s) for s in seqs],

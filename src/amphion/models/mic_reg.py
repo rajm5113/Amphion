@@ -66,8 +66,16 @@ def train(cfg=None) -> dict:
                  name, results[name]["RMSE"], results[name]["MAE"],
                  results[name]["R2"], results[name]["Spearman"])
 
-    best = min(results, key=lambda n: results[n]["RMSE"])
-    log.info("best by RMSE: %s", best)
+    # Deployability-aware selection: among models within 3% of the best RMSE, prefer
+    # the most compact. A 400-tree Random Forest is ~200x larger on disk than gradient
+    # boosting for a <2% RMSE difference — the wrong trade for a deployable system.
+    best_rmse = min(r["RMSE"] for r in results.values())
+    compact_order = ["ElasticNet", "HistGB", "RandomForest"]  # smallest -> largest
+    eligible = [n for n in results if results[n]["RMSE"] <= best_rmse * 1.03]
+    best = next((n for n in compact_order if n in eligible),
+                min(results, key=lambda n: results[n]["RMSE"]))
+    log.info("selected %s (RMSE %.3f; best was %.3f) — compact & within tolerance",
+             best, results[best]["RMSE"], best_rmse)
 
     model = _models(cfg.seed)[best].fit(X, y)
     models_dir = ensure_dir(cfg.resolve_path("models"))
@@ -91,7 +99,9 @@ def _write_card(cfg, results, best, shape):
 
 **Task:** predict a peptide's best potency `log10(min MIC, uM)` — lower = more potent.
 **Data:** GRAMPA positives ({shape[0]:,} peptides, {shape[1]} features).
-**Selected model:** {best} (lowest cluster-aware RMSE).
+**Selected model:** {best} — *deployability-aware* pick: the most compact model
+within 3% of the best RMSE (a 400-tree Random Forest is ~200x larger on disk for a
+<2% accuracy gain — the wrong trade for a deployable system).
 **CV:** GroupKFold on homology cluster_id (no near-duplicate leakage).
 
 | Model | RMSE | MAE | R² | Spearman |

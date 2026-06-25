@@ -16,7 +16,6 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SPACE = "rajm5113/Amphion"
 
 # Only the files the live demo actually loads.
 MODELS = ["activity_clf_esm.joblib", "tox_clf_esm.joblib", "mic_reg.joblib", "esm_config.json"]
@@ -27,14 +26,17 @@ def main():
     if not token:
         sys.exit("Set HF_TOKEN to a Hugging Face *write* token "
                  "(https://huggingface.co/settings/tokens).")
-    repo_id = os.environ.get("HF_SPACE", DEFAULT_SPACE)
-
     try:
         from huggingface_hub import HfApi, create_repo
     except ImportError:
         sys.exit("Install the client first:  .venv/Scripts/python -m pip install huggingface_hub")
 
     api = HfApi(token=token)
+    # Default the Space to <your-username>/Amphion (derived from the token).
+    repo_id = os.environ.get("HF_SPACE")
+    if not repo_id:
+        user = api.whoami(token=token)["name"]
+        repo_id = f"{user}/Amphion"
     create_repo(repo_id, repo_type="space", space_sdk="gradio", exist_ok=True, token=token)
     print(f"Space ready: https://huggingface.co/spaces/{repo_id}")
 

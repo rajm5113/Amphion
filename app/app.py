@@ -11,8 +11,13 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-# Make the repo importable whether run from the root or inside a Space.
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+# Make the `amphion` package importable whether app.py sits in app/ (repo) or at
+# the Space root. Look for a sibling or parent `src/amphion`.
+_here = Path(__file__).resolve().parent
+for _cand in (_here / "src", _here.parent / "src"):
+    if (_cand / "amphion").is_dir():
+        sys.path.insert(0, str(_cand))
+        break
 
 import gradio as gr
 

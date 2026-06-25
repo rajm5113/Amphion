@@ -45,10 +45,12 @@ def main():
                         path_or_fileobj=str(ROOT / local), path_in_repo=remote)
         print("  uploaded", remote)
 
-    # 1) the amphion package
+    # 1) the amphion package — both top-level files (amphion/*.py) AND sub-packages
+    # (amphion/*/*.py). NOTE: huggingface_hub uses fnmatch, where "**" does NOT match
+    # zero dirs, so a single "amphion/**/*.py" silently drops __init__.py/config.py/etc.
     api.upload_folder(repo_id=repo_id, repo_type="space", token=token,
                       folder_path=str(ROOT / "src"), path_in_repo="src",
-                      allow_patterns=["amphion/**/*.py"])
+                      allow_patterns=["amphion/*.py", "amphion/*/*.py"])
     print("  uploaded src/amphion")
     # 2) config + small hybrid models + processed parquets (for novelty)
     up_file("config.yaml", "config.yaml")
